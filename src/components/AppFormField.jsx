@@ -4,7 +4,7 @@ import { useFormikContext } from "formik";
 
 import useStyles from "./styles/formField.js";
 
-const AppFormField = ({ name, ...otherProps }) => {
+const AppFormField = ({ name, helper, ...otherProps }) => {
   const { setFieldTouched, handleChange, errors, touched } = useFormikContext();
   const classes = useStyles();
 
@@ -14,7 +14,7 @@ const AppFormField = ({ name, ...otherProps }) => {
       error={errors[name] && touched[name] ? true : false}
       onBlur={() => setFieldTouched(name)}
       onChange={handleChange(name)}
-      helperText={errors[name] && touched[name] ? errors[name] : null}
+      helperText={errors[name] && touched[name] ? errors[name] : helper}
       {...otherProps}
     />
   );

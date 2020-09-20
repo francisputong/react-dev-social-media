@@ -33,7 +33,7 @@ const Login = () => {
               TEODOYDOY
             </Typography>
             <AppForm
-              initialValues={{ email: "", password: "" }}
+              initialValues={{ email: "", password: "wwewewe" }}
               onSubmit={handleSubmit}
               validationSchema={validationSchema}
             >

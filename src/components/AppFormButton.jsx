@@ -8,7 +8,7 @@ const AppFormButton = ({ style, value, name, ...otherProps }) => {
   delete otherProps.form;
   const { handleSubmit, values } = useFormikContext();
   const classes = useStyles();
-  console.log(values["text"]);
+
   return (
     <Button
       type="submit"

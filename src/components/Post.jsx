@@ -7,15 +7,11 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import ModeCommentOutlinedIcon from "@material-ui/icons/ModeCommentOutlined";
-import moment from "moment";
+import Box from "@material-ui/core/Box";
 
-import useStyles from "./styles/post.js";
+import Moment from "react-moment";
 
 const Post = ({ post: { text, name, avatar, likes, comments, date } }) => {
-  const time = moment(date, "YYYYMMDD").fromNow();
-
-  const classes = useStyles();
-
   const handleFavorite = (e) => {
     e.stopPropagation();
     console.log("favorite");
@@ -41,15 +37,15 @@ const Post = ({ post: { text, name, avatar, likes, comments, date } }) => {
       <ListItemAvatar>
         <Avatar alt="icon" src={avatar} />
       </ListItemAvatar>
-      <div className={classes.container}>
+      <Box width="100%">
         <ListItemText
           primary={
-            <div className={classes.header}>
+            <Box display="flex" justifyContent="space-between" mb={0.5}>
               {name}{" "}
               <Typography variant="subtitle2" color="textSecondary">
-                {time}
+                <Moment date={date} fromNow />
               </Typography>
-            </div>
+            </Box>
           }
           secondary={
             <Typography component="span" variant="body2" color="textPrimary">
@@ -57,21 +53,21 @@ const Post = ({ post: { text, name, avatar, likes, comments, date } }) => {
             </Typography>
           }
         />
-        <div className={classes.icon}>
-          <div style={{ display: "flex", alignItems: "center" }}>
+        <Box display="flex" alignItems="center" justifyContent="space-around">
+          <Box display="flex" alignItems="center">
             <IconButton onClick={handleReply}>
               <ModeCommentOutlinedIcon fontSize="small" />
             </IconButton>
             <Typography color="textPrimary">{comments.length}</Typography>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          </Box>
+          <Box display="flex" alignItems="center">
             <IconButton onClick={handleFavorite}>
               <FavoriteBorderOutlinedIcon fontSize="small" />
             </IconButton>
             <Typography color="textPrimary">{likes.length}</Typography>
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     </ListItem>
   );
 };
