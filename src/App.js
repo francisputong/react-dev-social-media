@@ -1,23 +1,31 @@
-import React from "react";
-import Grid from "@material-ui/core/Grid";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
-import Login from "./components/pages/Login";
-import Home from "./components/pages/Home";
-import Profile from "./components/pages/Profile";
-import Container from "@material-ui/core/Container";
+import AuthRoute from "./routes/AuthRoutes";
+import PublicRoute from "./routes/PublicRoutes";
+import { getUser } from "./redux/actions/auth";
+//Redux
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const user = store.dispatch(getUser());
+    setIsLoading(true);
+    return () => user;
+  }, []);
+
+  if (!isLoading) return <div>Loading...</div>;
+
   return (
-    <>
-      <Grid style={{ display: "flex" }}>
-        <Grid item xs={2} sm={2} md={3} lg={3}>
-          <h1>HELLO</h1>
-        </Grid>
-        <Grid item xs={10} sm={10} md={6} lg={6}>
-          <Profile />
-        </Grid>
-      </Grid>
-    </>
+    <Router>
+      <Provider store={store}>
+        <PublicRoute />
+        <AuthRoute />
+      </Provider>
+    </Router>
   );
 };
 
