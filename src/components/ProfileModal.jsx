@@ -31,79 +31,28 @@ const ProfileModal = ({ open, handleClose, experience, education }) => {
         timeout: 500,
       }}
     >
-      <Fade in={open}>
-        <Grid
-          container
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Grid item xs={12} sm={6} md={4} lg={3} style={{ display: "flex" }}>
-            <Paper
-              style={{
-                // width: "30%",
-                // height: "80%",
-                padding: "10px",
-              }}
-            >
-              <GridList style={{ height: "100%" }} cols={1}>
-                <Box display="flex" flexDirection="column">
-                  <Typography variant="h5" color="textPrimary">
-                    Experience
-                  </Typography>
-                  {experience.map((exp) => (
-                    <Box key={exp}>
-                      <List>
-                        <ListItem divider>
-                          <ListItemText
-                            disableTypography
-                            inset
-                            primary={
-                              <Typography variant="h6" color="textPrimary">
-                                {exp.company}
-                              </Typography>
-                            }
-                            secondary={
-                              <>
-                                <Typography
-                                  variant="body2"
-                                  color="textPrimary"
-                                  component="p"
-                                >
-                                  <Moment date={exp.from} format="MM/DD/YYYY" />{" "}
-                                  - <Moment date={exp.ro} format="MM/DD/YYYY" />
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  color="textPrimary"
-                                  component="i"
-                                >
-                                  {exp.title}
-                                </Typography>
-                              </>
-                            }
-                          />
-                          <IconButton>
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItem>
-                      </List>
-                    </Box>
-                  ))}
-                  <Typography variant="h5" color="textPrimary">
-                    Education
-                  </Typography>
-                  <Box>
+      <Grid item xs={10} sm={6} md={4} lg={3}>
+        <Fade in={open}>
+          <Paper
+            style={{
+              height: "80vh",
+              padding: "10px",
+            }}
+          >
+            <GridList style={{ height: "100%" }} cols={1}>
+              <Box display="flex" flexDirection="column">
+                <Typography variant="h5" color="textPrimary">
+                  Experience
+                </Typography>
+                {experience.map((exp) => (
+                  <Box key={exp}>
                     <List>
                       <ListItem divider>
                         <ListItemText
                           disableTypography
-                          inset
                           primary={
                             <Typography variant="h6" color="textPrimary">
-                              La Salle
+                              {exp.company}
                             </Typography>
                           }
                           secondary={
@@ -113,14 +62,15 @@ const ProfileModal = ({ open, handleClose, experience, education }) => {
                                 color="textPrimary"
                                 component="p"
                               >
-                                2018-07-18
+                                <Moment date={exp.from} format="MM/DD/YYYY" /> -{" "}
+                                <Moment date={exp.ro} format="MM/DD/YYYY" />
                               </Typography>
                               <Typography
                                 variant="body2"
                                 color="textPrimary"
                                 component="i"
                               >
-                                BS Computer Engineering
+                                {exp.title}
                               </Typography>
                             </>
                           }
@@ -131,12 +81,50 @@ const ProfileModal = ({ open, handleClose, experience, education }) => {
                       </ListItem>
                     </List>
                   </Box>
+                ))}
+                <Typography variant="h5" color="textPrimary">
+                  Education
+                </Typography>
+                <Box>
+                  <List>
+                    <ListItem divider>
+                      <ListItemText
+                        disableTypography
+                        primary={
+                          <Typography variant="h6" color="textPrimary">
+                            La Salle
+                          </Typography>
+                        }
+                        secondary={
+                          <>
+                            <Typography
+                              variant="body2"
+                              color="textPrimary"
+                              component="p"
+                            >
+                              2018-07-18
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="textPrimary"
+                              component="i"
+                            >
+                              BS Computer Engineering
+                            </Typography>
+                          </>
+                        }
+                      />
+                      <IconButton>
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItem>
+                  </List>
                 </Box>
-              </GridList>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Fade>
+              </Box>
+            </GridList>
+          </Paper>
+        </Fade>
+      </Grid>
     </Modal>
   );
 };

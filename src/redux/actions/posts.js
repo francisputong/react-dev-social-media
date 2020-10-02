@@ -1,5 +1,11 @@
 import client from "../../api/client";
-import { CREATE_POST, GET_POSTS, DELETE_POST, UPDATE_LIKES } from "./types";
+import {
+  CREATE_POST,
+  GET_POSTS,
+  DELETE_POST,
+  UPDATE_LIKES,
+  CREATE_COMMENT,
+} from "./types";
 
 export const createPost = (text) => async (dispatch) => {
   try {
@@ -32,6 +38,18 @@ export const likePost = (postId) => async (dispatch) => {
   try {
     const response = await client.put(`/posts/like/${postId}`);
     dispatch({ type: UPDATE_LIKES, payload: { postId, likes: response.data } });
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const createComment = (postId, text) => async (dispatch) => {
+  try {
+    const response = await client.post(`/posts/comment/${postId}`, text);
+    dispatch({
+      type: CREATE_COMMENT,
+      payload: { postId, comments: response.data },
+    });
   } catch (error) {
     console.log(error.response);
   }

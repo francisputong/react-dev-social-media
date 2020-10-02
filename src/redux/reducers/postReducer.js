@@ -4,6 +4,7 @@ import {
   DELETE_POST,
   LOGOUT,
   UPDATE_LIKES,
+  CREATE_COMMENT,
 } from "../actions/types";
 
 const initialState = {
@@ -38,6 +39,16 @@ export default (state = initialState, action) => {
         ...state,
         posts: state.posts.map((post) =>
           post._id === payload.postId ? { ...post, likes: payload.likes } : post
+        ),
+      };
+
+    case CREATE_COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === payload.postId
+            ? { ...post, comments: payload.comments }
+            : post
         ),
       };
 

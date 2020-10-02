@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -14,6 +14,7 @@ import Box from "@material-ui/core/Box";
 import Moment from "react-moment";
 
 import { deletePost, likePost } from "../redux/actions/posts";
+import PostReplyModal from "./PostReplyModal";
 
 const Post = ({
   userId,
@@ -21,6 +22,10 @@ const Post = ({
   deletePost,
   likePost,
 }) => {
+  const [openReply, setOpenReply] = useState(false);
+
+  const handleCloseReply = () => setOpenReply(false);
+
   const handleFavorite = async (e, id) => {
     e.stopPropagation();
     await likePost(id);
@@ -28,10 +33,11 @@ const Post = ({
 
   const handleReply = (e) => {
     e.stopPropagation();
-    console.log("reply");
+    setOpenReply(true);
   };
 
   const handlePostClick = (e) => {
+    e.stopPropagation();
     console.log("POST");
   };
 
@@ -41,65 +47,73 @@ const Post = ({
   };
 
   const likeCheck = () => {
-    console.log(likes);
     if (likes.filter((like) => like.user === userId).length === 0)
       return <FavoriteBorderOutlinedIcon fontSize="small" />;
     else return <FavoriteIcon fontSize="small" />;
   };
 
   return (
-    <ListItem
-      onClick={handlePostClick}
-      button
-      disableRipple
-      divider
-      alignItems="flex-start"
-    >
-      <ListItemAvatar>
-        <Avatar alt="icon" src={avatar} />
-      </ListItemAvatar>
-      <Box width="100%">
-        <ListItemText
-          primary={
-            <Box display="flex" justifyContent="space-between" mb={0.5}>
-              {name}{" "}
-              <Box>
-                <Typography variant="subtitle2" color="textSecondary">
-                  <Moment date={date} fromNow />
-                  {userId === user && (
-                    <IconButton
-                      size="small"
-                      onClick={(e) => handlePostDelete(e, _id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
-                </Typography>
+    <>
+      <PostReplyModal
+        open={openReply}
+        handleClose={handleCloseReply}
+        name={name}
+        postId={_id}
+      />
+      <ListItem
+        onClick={handlePostClick}
+        button
+        disableRipple
+        divider
+        alignItems="flex-start"
+      >
+        <ListItemAvatar>
+          <Avatar alt="icon" src={avatar} />
+        </ListItemAvatar>
+        <Box width="100%">
+          <ListItemText
+            primary={
+              <Box display="flex" justifyContent="space-between" mb={0.5}>
+                {name}{" "}
+                <Box>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    <Moment date={date} fromNow />
+                    {userId === user && (
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handlePostDelete(e, _id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Typography>
+                </Box>
               </Box>
+            }
+            secondary={
+              <Typography component="div" variant="body2" color="textPrimary">
+                {text}
+              </Typography>
+            }
+          />
+          <Box display="flex" alignItems="center" justifyContent="space-around">
+            <Box display="flex" alignItems="center">
+              <IconButton onClick={handleReply}>
+                <ModeCommentOutlinedIcon fontSize="small" />
+              </IconButton>
+              <Typography color="textPrimary">{comments.length}</Typography>
             </Box>
-          }
-          secondary={
-            <Typography component="div" variant="body2" color="textPrimary">
-              {text}
-            </Typography>
-          }
-        />
-        <Box display="flex" alignItems="center" justifyContent="space-around">
-          <Box display="flex" alignItems="center">
-            <IconButton onClick={handleReply}>
-              <ModeCommentOutlinedIcon fontSize="small" />
-            </IconButton>
-            <Typography color="textPrimary">{comments.length}</Typography>
-          </Box>
-          <Box display="flex" alignItems="center">
-            <IconButton onClick={(e) => handleFavorite(e, _id)}>
-              {likeCheck()}
-            </IconButton>
-            <Typography color="textPrimary">{likes.length}</Typography>
+
+            <Box display="flex" alignItems="center">
+              <IconButton onClick={(e) => handleFavorite(e, _id)}>
+                {likeCheck()}
+              </IconButton>
+              <Typography color="textPrimary">{likes.length}</Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </ListItem>
+      </ListItem>
+    </>
   );
 };
 

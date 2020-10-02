@@ -40,6 +40,7 @@ const Home = ({ getPosts, createPost, posts }) => {
   return (
     <Grid container>
       <Grid
+        item
         style={{
           borderRight: "1px solid rgba(0,0,0,0.12)",
           backgroundClip: "padding-box",
