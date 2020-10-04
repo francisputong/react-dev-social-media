@@ -220,7 +220,7 @@ const Profile = ({
                       id={user._id}
                     />
                     <Box display="flex" justifyContent="space-around">
-                      {social.linkedIn && (
+                      {social.linkedin && (
                         <IconButton
                           onClick={(e) =>
                             (window.location.href = social.linkedIn)

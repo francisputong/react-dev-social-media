@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import * as Yup from "yup";
@@ -13,22 +14,23 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import AppForm from "./AppForm";
 import AppFormField from "./AppFormField";
 import AppFormButton from "./AppFormButton";
+import { createProfile } from "../redux/actions/profile";
 
-const EditProfileModal = ({ open, handleClose }) => {
+const EditProfileModal = ({ open, handleClose, profile, createProfile }) => {
   const validationSchema = Yup.object().shape({
     bio: Yup.string().label("Bio"),
-    github: Yup.string().label("GitHub"),
+    githubusername: Yup.string().label("GitHub"),
     company: Yup.string().label("Company"),
-    website: Yup.string().label("Website"),
     location: Yup.string().label("Location"),
     skills: Yup.string().label("Skills"),
-    linkedIn: Yup.string().label("LinkedIn"),
+    linkedin: Yup.string().label("LinkedIn"),
     facebook: Yup.string().label("Facebook"),
     twitter: Yup.string().label("Twitter"),
   });
 
-  const handleSubmit = (data) => {
-    console.log(data);
+  const handleSubmit = async (profileData) => {
+    await createProfile(profileData);
+    handleClose();
   };
 
   return (
@@ -50,15 +52,14 @@ const EditProfileModal = ({ open, handleClose }) => {
         >
           <AppForm
             initialValues={{
-              bio: "",
-              github: "",
-              company: "",
-              website: "",
-              location: "",
-              skills: "",
-              linkedIn: "",
-              twitter: "",
-              facebook: "",
+              bio: profile.bio || "",
+              githubusername: profile.githubusername || "",
+              company: profile.company || "",
+              location: profile.location || "",
+              skills: profile.skills.join() || "",
+              linkedin: profile.social.linkedin || "",
+              twitter: profile.social.twitter || "",
+              facebook: profile.social.facebook || "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
@@ -71,7 +72,11 @@ const EditProfileModal = ({ open, handleClose }) => {
               <Typography variant="h5">Edit Profile</Typography>
               <AppFormButton value="Save" color="primary" />
             </Box>
-            <GridList style={{ height: "80vh" }} cellHeight="auto" cols={1}>
+            <GridList
+              style={{ height: "80vh", margin: "none" }}
+              cellHeight="auto"
+              cols={1}
+            >
               <AppFormField
                 label="Bio"
                 name="bio"
@@ -82,7 +87,7 @@ const EditProfileModal = ({ open, handleClose }) => {
               />
               <AppFormField
                 label="GitHub"
-                name="github"
+                name="githubusername"
                 variant="filled"
                 margin="normal"
                 helper="GitHub username"
@@ -92,14 +97,7 @@ const EditProfileModal = ({ open, handleClose }) => {
                 name="company"
                 variant="filled"
                 margin="normal"
-                helper="Current company (if applicable)"
-              />
-              <AppFormField
-                label="Website"
-                name="website"
-                variant="filled"
-                margin="normal"
-                helper="Your personal website"
+                helper="Current company"
               />
               <AppFormField
                 label="Location"
@@ -119,7 +117,7 @@ const EditProfileModal = ({ open, handleClose }) => {
                 <LinkedInIcon style={{ color: "#2867B2" }} fontSize="large" />
                 <AppFormField
                   label="LinkedIn"
-                  name="linkedIn"
+                  name="linkedin"
                   variant="filled"
                   margin="normal"
                   helper="Link to your LinkedIn account"
@@ -153,4 +151,8 @@ const EditProfileModal = ({ open, handleClose }) => {
   );
 };
 
-export default EditProfileModal;
+const mapStatetoProps = (state) => ({
+  profile: state.profile.profile,
+});
+
+export default connect(mapStatetoProps, { createProfile })(EditProfileModal);
