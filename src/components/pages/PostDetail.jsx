@@ -96,7 +96,11 @@ const PostDetail = ({ getPost, createComment, match, post }) => {
                 <Typography variant="h6">Comments</Typography>
                 {post.comments.length > 0 ? (
                   post.comments.map((comment) => (
-                    <Comment comment={comment} postId={post._id} />
+                    <Comment
+                      key={post._id}
+                      comment={comment}
+                      postId={post._id}
+                    />
                   ))
                 ) : (
                   <Typography variant="caption">

@@ -23,80 +23,41 @@ import Posts from "../Posts";
 import SideMenu from "../SideMenu";
 import useStyles from "../styles/profileCard.js";
 import { getUserProfile } from "../../redux/actions/profile";
+import { getUserPosts } from "../../redux/actions/posts";
 
-const skills = ["HTML", "CSS", "PHP", "Python", "JS"];
+const Profile = ({
+  getUserProfile,
+  getUserPosts,
+  posts,
+  // profile,
+  profile: {
+    social,
+    skills,
+    user,
+    company,
+    location,
+    bio,
+    githubusername,
+    experience,
+    education,
+  },
+}) => {
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [postLoading, setPostLoading] = useState(false);
 
-const experience = [
-  {
-    id: "5f64bda3859ca6421077844f",
-    title: "Software Developer",
-    company: "Woofy Incorporated",
-    from: "2018-07-18T16:00:00.000Z",
-    to: "2018-09-18T16:00:00.000Z",
-  },
-];
-
-const education = [
-  {
-    id: "5f60ba34a36fd511b824bebe",
-    school: "La Salle",
-    degree: "BS Computer Engineering",
-    from: "2015-07-18T16:00:00.000Z",
-    to: "2019-09-18T16:00:00.000Z",
-  },
-];
-
-const posts = [
-  {
-    _id: "5f5c9d142de0ee1e14bcca3e",
-    text:
-      "Doggo the lazy quick brown fox jumped over  Doggo the lazy quick brown fox jumped over",
-    name: "Roseller",
-    avatar:
-      "//www.gravatar.com/avatar/fd3dece198b24d30203599d42eef2445?s=200&r=pg&d=mm",
-    likes: [],
-    comments: [],
-    date: "2020-09-12T10:04:04.935Z",
-  },
-  {
-    _id: "5f5c9d142de0ee1e14bcca3w",
-    text: "Doydoy",
-    name: "Teodorics",
-    avatar:
-      "//www.gravatar.com/avatar/fd3dece198b24d30203599d42eef2445?s=200&r=pg&d=mm",
-    likes: [],
-    comments: [],
-    date: "2020-08-12T10:04:04.935Z",
-  },
-  {
-    _id: "5f5c9d142de0ee1e14bcca3c",
-    text: "Doydoy",
-    name: "Teodorics",
-    avatar:
-      "//www.gravatar.com/avatar/fd3dece198b24d30203599d42eef2445?s=200&r=pg&d=mm",
-    likes: [],
-    comments: [],
-    date: "2020-08-12T10:04:04.935Z",
-  },
-  {
-    _id: "5f5c9d142de0ee1e14bcca3f",
-    text: "Doydoy",
-    name: "Teodorics",
-    avatar:
-      "//www.gravatar.com/avatar/fd3dece198b24d30203599d42eef2445?s=200&r=pg&d=mm",
-    likes: [],
-    comments: [],
-    date: "2020-08-12T10:04:04.935Z",
-  },
-];
-
-const Profile = ({ getUserProfile }) => {
   const getProfile = async () => {
     await getUserProfile();
+    setProfileLoading(true);
+  };
+
+  const getPosts = async () => {
+    await getUserPosts();
+    setPostLoading(true);
   };
 
   useEffect(() => {
     getProfile();
+    getPosts();
   }, []);
 
   const classes = useStyles();
@@ -149,124 +110,181 @@ const Profile = ({ getUserProfile }) => {
             <Typography variant="h5">Profile</Typography>
           </div>
           <Divider />
-
-          <Box display="flex" justifyContent="space-between">
-            <CardHeader
-              avatar={
-                <Avatar
-                  aria-label="profile"
-                  src="//www.gravatar.com/avatar/fd3dece198b24d30203599d42eef2445"
-                  className={classes.profileAvatar}
-                />
-              }
-              title="Roseller"
-              subheader={
-                <Box display="flex" alignItems="center">
-                  <GitHubIcon fontSize="small" style={{ marginRight: "5px" }} />
-                  <Box lineHeight="normal">
-                    <Typography variant="body2" color="textSecondary">
-                      francisputong
-                    </Typography>
+          {profileLoading && postLoading ? (
+            <>
+              {user ? (
+                <>
+                  <Box display="flex" justifyContent="space-between">
+                    <CardHeader
+                      avatar={
+                        <Avatar
+                          aria-label="profile"
+                          src={user.avatar}
+                          className={classes.profileAvatar}
+                        />
+                      }
+                      title={user.name}
+                      subheader={
+                        <Box display="flex" alignItems="center">
+                          <GitHubIcon
+                            fontSize="small"
+                            style={{ marginRight: "5px" }}
+                          />
+                          <Box lineHeight="normal">
+                            <Typography variant="body2" color="textSecondary">
+                              {githubusername}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      }
+                    />
+                    <Box display="flex" alignItems="center" mr="10px">
+                      <AppButton
+                        size="small"
+                        value="Edit Profile"
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleOpenEditProfile}
+                      />
+                      <EditProfileModal
+                        open={openEditProfile}
+                        handleClose={handleCloseEditProfile}
+                      />
+                    </Box>
                   </Box>
-                </Box>
-              }
-            />
-            <Box display="flex" alignItems="center" mr="10px">
-              <AppButton
-                size="small"
-                value="Edit Profile"
-                variant="outlined"
-                color="primary"
-                onClick={handleOpenEditProfile}
-              />
-              <EditProfileModal
-                open={openEditProfile}
-                handleClose={handleCloseEditProfile}
-              />
-            </Box>
-          </Box>
-          <CardContent>
-            <Typography variant="body2" color="textPrimary" component="p">
-              Software Engineer based in Manila.
-            </Typography>
-            <Box display="flex" justifyContent="space-around" mt={0.5}>
-              <Box display="flex" alignItems="center">
-                <WorkIcon fontSize="small" />
-                <Box lineHeight="normal">
-                  <Typography variant="body2" color="textSecondary">
-                    AAA
-                  </Typography>
-                </Box>
-              </Box>
-              <Box display="flex" alignItems="center">
-                <LocationOnIcon fontSize="small" />
-                <Box lineHeight="normal">
-                  <Typography variant="body2" color="textSecondary">
-                    Manila
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-            <Divider style={{ margin: "10px" }} />
-            <div>
-              <Typography
-                component="p"
-                variant="body1"
-                color="textPrimary"
-                align="center"
-              >
-                Skills
+                  <CardContent>
+                    <Typography
+                      variant="body2"
+                      color="textPrimary"
+                      component="p"
+                    >
+                      {bio}
+                    </Typography>
+                    <Box display="flex" justifyContent="space-around" mt={0.5}>
+                      <Box display="flex" alignItems="center">
+                        <WorkIcon fontSize="small" />
+                        <Box lineHeight="normal">
+                          <Typography variant="body2" color="textSecondary">
+                            {company}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box display="flex" alignItems="center">
+                        <LocationOnIcon fontSize="small" />
+                        <Box lineHeight="normal">
+                          <Typography variant="body2" color="textSecondary">
+                            {location}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Divider style={{ margin: "10px" }} />
+                    <div>
+                      <Typography
+                        component="p"
+                        variant="body1"
+                        color="textPrimary"
+                        align="center"
+                      >
+                        Skills
+                      </Typography>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          flexWrap: "wrap",
+                          listStyle: "none",
+                          margin: 0,
+                        }}
+                      >
+                        {skills.map((skill, i) => (
+                          <li key={i}>
+                            <Chip style={{ margin: "2px" }} label={skill} />
+                          </li>
+                        ))}
+                      </div>
+                    </div>
+                    <br />
+                    <Box display="flex" justifyContent="space-around">
+                      <AppButton
+                        onClick={handleOpenWE}
+                        size="small"
+                        value="Experience & Education"
+                      />
+                    </Box>
+                    <ProfileModal
+                      open={openWE}
+                      handleClose={handleCloseWE}
+                      experience={experience}
+                      education={education}
+                      id={user._id}
+                    />
+                    <Box display="flex" justifyContent="space-around">
+                      {social.linkedIn && (
+                        <IconButton
+                          onClick={(e) =>
+                            (window.location.href = social.linkedIn)
+                          }
+                        >
+                          <LinkedInIcon
+                            style={{ color: "#2867B2" }}
+                            fontSize="large"
+                          />
+                        </IconButton>
+                      )}
+                      {social.facebook && (
+                        <IconButton
+                          onClick={(e) =>
+                            (window.location.href = social.facebook)
+                          }
+                        >
+                          <FacebookIcon
+                            style={{ color: "#4267B2" }}
+                            fontSize="large"
+                          />
+                        </IconButton>
+                      )}
+                      {social.twitter && (
+                        <IconButton
+                          onClick={(e) =>
+                            (window.location.href = social.twitter)
+                          }
+                        >
+                          <TwitterIcon
+                            style={{ color: "#1DA1F2" }}
+                            fontSize="large"
+                          />
+                        </IconButton>
+                      )}
+                    </Box>
+                  </CardContent>
+                </>
+              ) : (
+                <p>This user has no profile</p>
+              )}
+              <Typography variant="h5" component="p">
+                Posts
               </Typography>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  listStyle: "none",
-                  margin: 0,
-                }}
-              >
-                {skills.map((skill, i) => (
-                  <li key={i}>
-                    <Chip style={{ margin: "2px" }} label={skill} />
-                  </li>
-                ))}
-              </div>
-            </div>
-            <br />
-            <Box display="flex" justifyContent="space-around">
-              <AppButton
-                onClick={handleOpenWE}
-                size="small"
-                value="Experience & Education"
-              />
-            </Box>
-            <ProfileModal
-              open={openWE}
-              handleClose={handleCloseWE}
-              experience={experience}
-              education={education}
-            />
-            <Box display="flex" justifyContent="space-around">
-              <IconButton>
-                <LinkedInIcon style={{ color: "#2867B2" }} fontSize="large" />
-              </IconButton>
-              <IconButton>
-                <FacebookIcon style={{ color: "#4267B2" }} fontSize="large" />
-              </IconButton>
-              <IconButton>
-                <TwitterIcon style={{ color: "#1DA1F2" }} fontSize="large" />
-              </IconButton>
-            </Box>
-            <Typography variant="h5" component="p">
-              Posts
-            </Typography>
-          </CardContent>
-          <Posts posts={posts} />
+              {posts.length > 0 ? (
+                <Posts posts={posts} />
+              ) : (
+                <p>This user has no posts</p>
+              )}
+            </>
+          ) : (
+            <p>Loading...</p>
+          )}
         </Box>
       </Grid>
     </Grid>
   );
 };
 
-export default connect(null, { getUserProfile })(Profile);
+const mapStateToProps = (state) => ({
+  profile: state.profile.profile,
+  posts: state.post.posts,
+});
+
+export default connect(mapStateToProps, { getUserProfile, getUserPosts })(
+  Profile
+);

@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Modal from "@material-ui/core/Modal";
@@ -15,7 +16,14 @@ import IconButton from "@material-ui/core/IconButton";
 
 import Moment from "react-moment";
 
-const ProfileModal = ({ open, handleClose, experience, education }) => {
+const ProfileModal = ({
+  open,
+  handleClose,
+  experience,
+  education,
+  userId,
+  id,
+}) => {
   return (
     <Modal
       style={{
@@ -45,7 +53,7 @@ const ProfileModal = ({ open, handleClose, experience, education }) => {
                   Experience
                 </Typography>
                 {experience.map((exp) => (
-                  <Box key={exp}>
+                  <Box key={exp._id}>
                     <List>
                       <ListItem divider>
                         <ListItemText
@@ -75,9 +83,11 @@ const ProfileModal = ({ open, handleClose, experience, education }) => {
                             </>
                           }
                         />
-                        <IconButton>
-                          <DeleteIcon />
-                        </IconButton>
+                        {userId === id && (
+                          <IconButton>
+                            <DeleteIcon />
+                          </IconButton>
+                        )}
                       </ListItem>
                     </List>
                   </Box>
@@ -85,41 +95,46 @@ const ProfileModal = ({ open, handleClose, experience, education }) => {
                 <Typography variant="h5" color="textPrimary">
                   Education
                 </Typography>
-                <Box>
-                  <List>
-                    <ListItem divider>
-                      <ListItemText
-                        disableTypography
-                        primary={
-                          <Typography variant="h6" color="textPrimary">
-                            La Salle
-                          </Typography>
-                        }
-                        secondary={
-                          <>
-                            <Typography
-                              variant="body2"
-                              color="textPrimary"
-                              component="p"
-                            >
-                              2018-07-18
+                {education.map((edu) => (
+                  <Box key={edu._id}>
+                    <List>
+                      <ListItem divider>
+                        <ListItemText
+                          disableTypography
+                          primary={
+                            <Typography variant="h6" color="textPrimary">
+                              {edu.school}
                             </Typography>
-                            <Typography
-                              variant="body2"
-                              color="textPrimary"
-                              component="i"
-                            >
-                              BS Computer Engineering
-                            </Typography>
-                          </>
-                        }
-                      />
-                      <IconButton>
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItem>
-                  </List>
-                </Box>
+                          }
+                          secondary={
+                            <>
+                              <Typography
+                                variant="body2"
+                                color="textPrimary"
+                                component="p"
+                              >
+                                <Moment date={edu.from} format="MM/DD/YYYY" /> -{" "}
+                                <Moment date={edu.ro} format="MM/DD/YYYY" />
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="textPrimary"
+                                component="i"
+                              >
+                                {edu.degree}
+                              </Typography>
+                            </>
+                          }
+                        />
+                        {userId === id && (
+                          <IconButton>
+                            <DeleteIcon />
+                          </IconButton>
+                        )}
+                      </ListItem>
+                    </List>
+                  </Box>
+                ))}
               </Box>
             </GridList>
           </Paper>
@@ -129,4 +144,8 @@ const ProfileModal = ({ open, handleClose, experience, education }) => {
   );
 };
 
-export default ProfileModal;
+const mapStateToProps = (state) => ({
+  userId: state.auth.user.id,
+});
+
+export default connect(mapStateToProps)(ProfileModal);

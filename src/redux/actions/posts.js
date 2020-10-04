@@ -36,6 +36,15 @@ export const getPost = (postId) => async (dispatch) => {
   }
 };
 
+export const getUserPosts = () => async (dispatch) => {
+  try {
+    const response = await client.get("/posts/user");
+    dispatch({ type: GET_POSTS, payload: response.data });
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
 export const deletePost = (postId) => async (dispatch) => {
   try {
     await client.delete(`/posts/${postId}`);
