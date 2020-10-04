@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -21,6 +22,7 @@ import EditProfileModal from "../EditProfileModal";
 import Posts from "../Posts";
 import SideMenu from "../SideMenu";
 import useStyles from "../styles/profileCard.js";
+import { getUserProfile } from "../../redux/actions/profile";
 
 const skills = ["HTML", "CSS", "PHP", "Python", "JS"];
 
@@ -46,7 +48,7 @@ const education = [
 
 const posts = [
   {
-    id: "5f5c9d142de0ee1e14bcca3e",
+    _id: "5f5c9d142de0ee1e14bcca3e",
     text:
       "Doggo the lazy quick brown fox jumped over  Doggo the lazy quick brown fox jumped over",
     name: "Roseller",
@@ -57,7 +59,7 @@ const posts = [
     date: "2020-09-12T10:04:04.935Z",
   },
   {
-    id: "5f5c9d142de0ee1e14bcca3w",
+    _id: "5f5c9d142de0ee1e14bcca3w",
     text: "Doydoy",
     name: "Teodorics",
     avatar:
@@ -67,7 +69,7 @@ const posts = [
     date: "2020-08-12T10:04:04.935Z",
   },
   {
-    id: "5f5c9d142de0ee1e14bcca3c",
+    _id: "5f5c9d142de0ee1e14bcca3c",
     text: "Doydoy",
     name: "Teodorics",
     avatar:
@@ -77,7 +79,7 @@ const posts = [
     date: "2020-08-12T10:04:04.935Z",
   },
   {
-    id: "5f5c9d142de0ee1e14bcca3f",
+    _id: "5f5c9d142de0ee1e14bcca3f",
     text: "Doydoy",
     name: "Teodorics",
     avatar:
@@ -88,7 +90,15 @@ const posts = [
   },
 ];
 
-const Profile = () => {
+const Profile = ({ getUserProfile }) => {
+  const getProfile = async () => {
+    await getUserProfile();
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   const classes = useStyles();
   const [openWE, setOpenWE] = useState(false);
   const [openEditProfile, setOpenEditProfile] = useState(false);
@@ -101,11 +111,45 @@ const Profile = () => {
 
   return (
     <Grid container>
-      <Grid item xs={2} sm={2} md={3} lg={3}>
-        <SideMenu />
+      <Grid
+        item
+        style={{
+          borderRight: "1px solid rgba(0,0,0,0.12)",
+          backgroundClip: "padding-box",
+        }}
+        container
+        direction="column"
+        alignItems="flex-end"
+        xs={2}
+        sm={2}
+        md={3}
+        lg={3}
+      >
+        <Box position="fixed" pr="20px">
+          <SideMenu />
+        </Box>
       </Grid>
-      <Grid item xs={10} sm={8} md={6} lg={6}>
+      <Grid
+        style={{
+          borderRight: "1px solid rgba(0,0,0,0.12)",
+          backgroundClip: "padding-box",
+        }}
+        item
+        xs={10}
+        sm={8}
+        md={6}
+        lg={6}
+      >
         <Box>
+          <div
+            style={{
+              padding: "5px 0px 5px 16px",
+            }}
+          >
+            <Typography variant="h5">Profile</Typography>
+          </div>
+          <Divider />
+
           <Box display="flex" justifyContent="space-between">
             <CardHeader
               avatar={
@@ -194,12 +238,7 @@ const Profile = () => {
               <AppButton
                 onClick={handleOpenWE}
                 size="small"
-                value="Experience"
-              />
-              <AppButton
-                onClick={handleOpenWE}
-                size="small"
-                value="Education"
+                value="Experience & Education"
               />
             </Box>
             <ProfileModal
@@ -222,12 +261,12 @@ const Profile = () => {
             <Typography variant="h5" component="p">
               Posts
             </Typography>
-            <Posts posts={posts} />
           </CardContent>
+          <Posts posts={posts} />
         </Box>
       </Grid>
     </Grid>
   );
 };
 
-export default Profile;
+export default connect(null, { getUserProfile })(Profile);

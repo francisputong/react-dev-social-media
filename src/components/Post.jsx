@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -21,7 +22,9 @@ const Post = ({
   post: { _id, text, name, avatar, likes, comments, date, user },
   deletePost,
   likePost,
+  clickable = true,
 }) => {
+  const history = useHistory();
   const [openReply, setOpenReply] = useState(false);
 
   const handleCloseReply = () => setOpenReply(false);
@@ -38,7 +41,7 @@ const Post = ({
 
   const handlePostClick = (e) => {
     e.stopPropagation();
-    console.log("POST");
+    return history.push(`/post/${name}/${_id}`);
   };
 
   const handlePostDelete = async (e, id) => {
@@ -61,9 +64,9 @@ const Post = ({
         postId={_id}
       />
       <ListItem
-        onClick={handlePostClick}
-        button
-        disableRipple
+        onClick={clickable ? handlePostClick : null}
+        button={clickable}
+        disableRipple={clickable}
         divider
         alignItems="flex-start"
       >

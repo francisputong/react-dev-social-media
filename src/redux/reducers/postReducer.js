@@ -1,16 +1,17 @@
 import {
   CREATE_POST,
   GET_POSTS,
+  GET_POST,
   DELETE_POST,
   LOGOUT,
   UPDATE_LIKES,
   CREATE_COMMENT,
+  DELETE_COMMENT,
 } from "../actions/types";
 
 const initialState = {
   posts: [],
-  userPost: [],
-  likedPosts: [],
+  userPost: {},
 };
 
 export default (state = initialState, action) => {
@@ -20,6 +21,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         posts: payload,
+      };
+
+    case GET_POST:
+      state.userPost = {};
+      return {
+        ...state,
+        userPost: payload,
       };
 
     case CREATE_POST:
@@ -40,6 +48,7 @@ export default (state = initialState, action) => {
         posts: state.posts.map((post) =>
           post._id === payload.postId ? { ...post, likes: payload.likes } : post
         ),
+        userPost: { ...state.userPost, likes: payload.likes },
       };
 
     case CREATE_COMMENT:
@@ -50,12 +59,25 @@ export default (state = initialState, action) => {
             ? { ...post, comments: payload.comments }
             : post
         ),
+        userPost: { ...state.userPost, comments: payload.comments },
+      };
+
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        userPost: {
+          ...state.userPost,
+          comments: state.userPost.comments.filter(
+            (comment) => comment._id !== payload
+          ),
+        },
       };
 
     case LOGOUT:
       return {
         ...state,
         posts: [],
+        userPost: {},
       };
 
     default:

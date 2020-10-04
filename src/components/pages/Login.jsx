@@ -27,7 +27,6 @@ const Login = ({ login, isAuth }) => {
   };
 
   if (isAuth) {
-    console.log(isAuth);
     return <Redirect to="/home" />;
   }
 
