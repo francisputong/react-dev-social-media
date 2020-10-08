@@ -17,7 +17,7 @@ export const getUser = () => async (dispatch) => {
   }
 };
 
-export const login = (body) => async (dispatch) => {
+export const login = (body, setIsLoading) => async (dispatch) => {
   try {
     const response = await client.post("/auth", body);
     const token = response.data.token;
@@ -25,6 +25,20 @@ export const login = (body) => async (dispatch) => {
     const user = decodedToken.user;
     dispatch({ type: AUTHENTICATE, payload: { token, user } });
   } catch (error) {
+    setIsLoading(false);
+    console.log(error);
+  }
+};
+
+export const register = (body, setIsLoading) => async (dispatch) => {
+  try {
+    const response = await client.post("/users", body);
+    const token = response.data.token;
+    const decodedToken = jwtDecode(token);
+    const user = decodedToken.user;
+    dispatch({ type: AUTHENTICATE, payload: { token, user } });
+  } catch (error) {
+    setIsLoading(false);
     console.log(error);
   }
 };

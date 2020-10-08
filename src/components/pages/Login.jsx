@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -21,9 +22,11 @@ const validationSchema = Yup.object().shape({
 
 const Login = ({ login, isAuth }) => {
   const classes = useStyles();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async ({ email, password }) => {
-    await login({ email, password });
+    setIsLoading(true);
+    await login({ email, password }, setIsLoading);
   };
 
   if (isAuth) {
@@ -35,7 +38,7 @@ const Login = ({ login, isAuth }) => {
       <Card className={classes.card}>
         <CardContent className={classes.cardContent}>
           <Typography color="textPrimary" variant="h5">
-            Devs App
+            Dev App
           </Typography>
           <AppForm
             initialValues={{ email: "", password: "" }}
@@ -61,13 +64,19 @@ const Login = ({ login, isAuth }) => {
                 value="Log In"
                 color="primary"
                 size="large"
+                disabled={isLoading}
               />
             </form>
             <Divider
               variant="middle"
               style={{ width: "100%", margin: "10px" }}
             />
-            <AppButton value="Create an account" color="default" />
+            <AppButton
+              value="Create an account"
+              color="default"
+              component={Link}
+              to="/register"
+            />
           </AppForm>
         </CardContent>
       </Card>
