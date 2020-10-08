@@ -56,10 +56,10 @@ const EditProfileModal = ({ open, handleClose, profile, createProfile }) => {
               githubusername: profile.githubusername || "",
               company: profile.company || "",
               location: profile.location || "",
-              skills: profile.skills.join() || "",
-              linkedin: profile.social.linkedin || "",
-              twitter: profile.social.twitter || "",
-              facebook: profile.social.facebook || "",
+              skills: profile.skills?.join() || "",
+              linkedin: profile.social?.linkedin || "",
+              twitter: profile.social?.twitter || "",
+              facebook: profile.social?.facebook || "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}

@@ -9,9 +9,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
 
-import { logout } from "../redux/actions/auth";
-
-const SideMenu = ({ logout }) => {
+const SideMenu = ({ userId }) => {
   return (
     <MenuList>
       <MenuItem component={Link} to="/home">
@@ -20,7 +18,7 @@ const SideMenu = ({ logout }) => {
         </ListItemIcon>
         <Typography variant="inherit">Home</Typography>
       </MenuItem>
-      <MenuItem component={Link} to="/profile">
+      <MenuItem component={Link} to={`/profile/${userId}`}>
         <ListItemIcon>
           <PersonIcon fontSize="large" />
         </ListItemIcon>
@@ -28,9 +26,12 @@ const SideMenu = ({ logout }) => {
           Profile
         </Typography>
       </MenuItem>
-      <MenuItem onClick={logout}>Log out</MenuItem>
     </MenuList>
   );
 };
 
-export default connect(null, { logout })(SideMenu);
+const mapStateToProps = (state) => ({
+  userId: state.auth.user.id,
+});
+
+export default connect(mapStateToProps)(SideMenu);

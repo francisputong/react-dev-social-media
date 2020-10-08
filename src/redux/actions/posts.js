@@ -7,6 +7,7 @@ import {
   UPDATE_LIKES,
   CREATE_COMMENT,
   DELETE_COMMENT,
+  RESET_USER_POSTS,
 } from "./types";
 
 export const createPost = (text) => async (dispatch) => {
@@ -36,9 +37,10 @@ export const getPost = (postId) => async (dispatch) => {
   }
 };
 
-export const getUserPosts = () => async (dispatch) => {
+export const getUserPosts = (userPostsId) => async (dispatch) => {
   try {
-    const response = await client.get("/posts/user");
+    dispatch({ type: RESET_USER_POSTS });
+    const response = await client.get(`posts/user/${userPostsId}`);
     dispatch({ type: GET_POSTS, payload: response.data });
   } catch (error) {
     console.log(error.response);
@@ -80,7 +82,6 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
     const response = await client.delete(
       `/posts/comment/${postId}/${commentId}`
     );
-    console.log(response.data);
     dispatch({
       type: DELETE_COMMENT,
       payload: commentId,

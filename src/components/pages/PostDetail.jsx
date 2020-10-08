@@ -5,6 +5,8 @@ import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import * as Yup from "yup";
 
 import { getPost, createComment } from "../../redux/actions/posts";
@@ -23,6 +25,7 @@ const validationSchema = Yup.object().shape({
 const PostDetail = ({ getPost, createComment, match, post }) => {
   const classes = useStyles();
   const [postLoading, setPostLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getUserPost = async () => {
     await getPost(match.params.id);
@@ -34,8 +37,10 @@ const PostDetail = ({ getPost, createComment, match, post }) => {
   }, []);
 
   const handleSubmit = async (text, { resetForm }) => {
+    setIsSubmitting(true);
     await createComment(match.params.id, text);
     resetForm({});
+    setIsSubmitting(false);
   };
 
   return (
@@ -60,7 +65,6 @@ const PostDetail = ({ getPost, createComment, match, post }) => {
             <Typography variant="h5">{match.params.user}`s post</Typography>
           </div>
           <Divider />
-          {/* {postLoading ? <Posts posts={post} /> : <p>loading</p>} */}
           {postLoading ? (
             <>
               <Post post={post} clickable={false} />
@@ -88,6 +92,7 @@ const PostDetail = ({ getPost, createComment, match, post }) => {
                       name="text"
                       value="Reply"
                       color="primary"
+                      disabled={isSubmitting}
                     />
                   </div>
                 </AppForm>
@@ -110,7 +115,9 @@ const PostDetail = ({ getPost, createComment, match, post }) => {
               </Box>
             </>
           ) : (
-            <p>Loading...</p>
+            <Box display="flex" justifyContent="center" height="90vh" mt="10px">
+              <CircularProgress />
+            </Box>
           )}
         </Box>
       </Grid>

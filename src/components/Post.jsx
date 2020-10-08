@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import Link from "@material-ui/core/Link";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -44,6 +45,11 @@ const Post = ({
     return history.push(`/post/${name}/${_id}`);
   };
 
+  const handleProfileClick = (e) => {
+    e.stopPropagation();
+    return history.push(`/profile/${user}`);
+  };
+
   const handlePostDelete = async (e, id) => {
     e.stopPropagation();
     await deletePost(id);
@@ -77,7 +83,11 @@ const Post = ({
           <ListItemText
             primary={
               <Box display="flex" justifyContent="space-between" mb={0.5}>
-                {name}{" "}
+                <Typography>
+                  <Link onClick={handleProfileClick} color="inherit">
+                    {name}
+                  </Link>{" "}
+                </Typography>
                 <Box>
                   <Typography variant="subtitle2" color="textSecondary">
                     <Moment date={date} fromNow />

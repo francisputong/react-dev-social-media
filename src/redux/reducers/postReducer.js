@@ -7,6 +7,7 @@ import {
   UPDATE_LIKES,
   CREATE_COMMENT,
   DELETE_COMMENT,
+  RESET_USER_POSTS,
 } from "../actions/types";
 
 const initialState = {
@@ -71,6 +72,13 @@ export default (state = initialState, action) => {
             (comment) => comment._id !== payload
           ),
         },
+      };
+
+    case RESET_USER_POSTS:
+      return {
+        ...state,
+        posts: [],
+        userPost: {},
       };
 
     case LOGOUT:

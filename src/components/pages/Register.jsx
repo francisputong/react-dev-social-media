@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(6).label("Password"),
 });
 
-const Login = ({ login, isAuth }) => {
+const Register = ({ login, isAuth }) => {
   const classes = useStyles();
 
   const handleSubmit = async ({ email, password }) => {
@@ -34,7 +34,7 @@ const Login = ({ login, isAuth }) => {
     <div className={classes.login}>
       <Card className={classes.card}>
         <CardContent className={classes.cardContent}>
-          <Typography color="textPrimary" variant="h5">
+          <Typography color="textPrimary" component="h1">
             Devs App
           </Typography>
           <AppForm
@@ -54,7 +54,6 @@ const Login = ({ login, isAuth }) => {
                 variant="outlined"
                 name="password"
                 label="Password"
-                type="password"
               />
               <AppFormButton
                 fullWidth
@@ -79,4 +78,4 @@ const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { login })(Register);

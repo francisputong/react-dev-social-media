@@ -15,20 +15,27 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import IconButton from "@material-ui/core/IconButton";
+import Hidden from "@material-ui/core/Hidden";
 
 import AppButton from "../AppButton";
 import ProfileModal from "../ProfileModal";
 import EditProfileModal from "../EditProfileModal";
 import Posts from "../Posts";
 import SideMenu from "../SideMenu";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import useStyles from "../styles/profileCard.js";
 import { getUserProfile } from "../../redux/actions/profile";
 import { getUserPosts } from "../../redux/actions/posts";
+import { logout } from "../../redux/actions/auth";
 
 const Profile = ({
   getUserProfile,
   getUserPosts,
+  logout,
   posts,
+  match,
+  userId,
   // profile,
   profile: {
     social,
@@ -45,20 +52,20 @@ const Profile = ({
   const [profileLoading, setProfileLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
 
-  const getProfile = async () => {
-    await getUserProfile();
+  const getProfile = async (profileId) => {
+    await getUserProfile(profileId);
     setProfileLoading(true);
   };
 
-  const getPosts = async () => {
-    await getUserPosts();
+  const getPosts = async (userPostsId) => {
+    await getUserPosts(userPostsId);
     setPostLoading(true);
   };
 
   useEffect(() => {
-    getProfile();
-    getPosts();
-  }, []);
+    getProfile(match.params.id);
+    getPosts(match.params.id);
+  }, [match.params.id]);
 
   const classes = useStyles();
   const [openWE, setOpenWE] = useState(false);
@@ -70,45 +77,41 @@ const Profile = ({
   const handleOpenEditProfile = () => setOpenEditProfile(true);
   const handleCloseEditProfile = () => setOpenEditProfile(false);
 
+  const handleLogOut = () => logout();
+
   return (
     <Grid container>
       <Grid
         item
-        style={{
-          borderRight: "1px solid rgba(0,0,0,0.12)",
-          backgroundClip: "padding-box",
-        }}
+        className={classes.border}
         container
         direction="column"
         alignItems="flex-end"
-        xs={2}
-        sm={2}
+        sm={1}
         md={3}
         lg={3}
       >
         <Box position="fixed" pr="20px">
-          <SideMenu />
+          <Hidden smDown>
+            <SideMenu />
+          </Hidden>
         </Box>
       </Grid>
-      <Grid
-        style={{
-          borderRight: "1px solid rgba(0,0,0,0.12)",
-          backgroundClip: "padding-box",
-        }}
-        item
-        xs={10}
-        sm={8}
-        md={6}
-        lg={6}
-      >
+      <Grid className={classes.border} item xs={12} sm={10} md={6} lg={6}>
         <Box>
-          <div
-            style={{
-              padding: "5px 0px 5px 16px",
-            }}
+          <Box
+            padding="5px 16px 5px 16px"
+            display="flex"
+            justifyContent="space-between"
           >
             <Typography variant="h5">Profile</Typography>
-          </div>
+            <AppButton
+              size="small"
+              value="Log out"
+              color="primary"
+              onClick={handleLogOut}
+            />
+          </Box>
           <Divider />
           {profileLoading && postLoading ? (
             <>
@@ -139,13 +142,15 @@ const Profile = ({
                       }
                     />
                     <Box display="flex" alignItems="center" mr="10px">
-                      <AppButton
-                        size="small"
-                        value="Edit Profile"
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleOpenEditProfile}
-                      />
+                      {userId === match.params.id && (
+                        <AppButton
+                          size="small"
+                          value="Edit Profile"
+                          variant="outlined"
+                          color="primary"
+                          onClick={handleOpenEditProfile}
+                        />
+                      )}
                       <EditProfileModal
                         open={openEditProfile}
                         handleClose={handleCloseEditProfile}
@@ -220,7 +225,7 @@ const Profile = ({
                       id={user._id}
                     />
                     <Box display="flex" justifyContent="space-around">
-                      {social.linkedin && (
+                      {social?.linkedin && (
                         <IconButton
                           onClick={(e) =>
                             (window.location.href = social.linkedIn)
@@ -232,7 +237,7 @@ const Profile = ({
                           />
                         </IconButton>
                       )}
-                      {social.facebook && (
+                      {social?.facebook && (
                         <IconButton
                           onClick={(e) =>
                             (window.location.href = social.facebook)
@@ -244,7 +249,7 @@ const Profile = ({
                           />
                         </IconButton>
                       )}
-                      {social.twitter && (
+                      {social?.twitter && (
                         <IconButton
                           onClick={(e) =>
                             (window.location.href = social.twitter)
@@ -260,7 +265,22 @@ const Profile = ({
                   </CardContent>
                 </>
               ) : (
-                <p>This user has no profile</p>
+                <p>
+                  No profile{" "}
+                  {userId === match.params.id && (
+                    <AppButton
+                      size="small"
+                      value="Edit Profile"
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleOpenEditProfile}
+                    />
+                  )}
+                  <EditProfileModal
+                    open={openEditProfile}
+                    handleClose={handleCloseEditProfile}
+                  />
+                </p>
               )}
               <Typography variant="h5" component="p">
                 Posts
@@ -272,7 +292,9 @@ const Profile = ({
               )}
             </>
           ) : (
-            <p>Loading...</p>
+            <Box display="flex" justifyContent="center" height="90vh" mt="10px">
+              <CircularProgress />
+            </Box>
           )}
         </Box>
       </Grid>
@@ -283,8 +305,11 @@ const Profile = ({
 const mapStateToProps = (state) => ({
   profile: state.profile.profile,
   posts: state.post.posts,
+  userId: state.auth.user.id,
 });
 
-export default connect(mapStateToProps, { getUserProfile, getUserPosts })(
-  Profile
-);
+export default connect(mapStateToProps, {
+  getUserProfile,
+  getUserPosts,
+  logout,
+})(Profile);
