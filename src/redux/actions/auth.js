@@ -24,9 +24,10 @@ export const login = (body, setIsLoading) => async (dispatch) => {
     const decodedToken = jwtDecode(token);
     const user = decodedToken.user;
     dispatch({ type: AUTHENTICATE, payload: { token, user } });
-  } catch (error) {
+  } catch (err) {
     setIsLoading(false);
-    console.log(error);
+    const error = err.response.data.errors[0] || null;
+    return { error };
   }
 };
 

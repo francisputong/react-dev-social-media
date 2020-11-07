@@ -79,9 +79,7 @@ export const createComment = (postId, text) => async (dispatch) => {
 
 export const deleteComment = (postId, commentId) => async (dispatch) => {
   try {
-    const response = await client.delete(
-      `/posts/comment/${postId}/${commentId}`
-    );
+    await client.delete(`/posts/comment/${postId}/${commentId}`);
     dispatch({
       type: DELETE_COMMENT,
       payload: commentId,

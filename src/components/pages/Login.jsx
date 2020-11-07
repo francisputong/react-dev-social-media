@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert";
 import Divider from "@material-ui/core/Divider";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
@@ -23,10 +24,12 @@ const validationSchema = Yup.object().shape({
 const Login = ({ login, isAuth }) => {
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async ({ email, password }) => {
     setIsLoading(true);
-    await login({ email, password }, setIsLoading);
+    const { error } = await login({ email, password }, setIsLoading);
+    setError(error.msg);
   };
 
   if (isAuth) {
@@ -40,6 +43,7 @@ const Login = ({ login, isAuth }) => {
           <Typography color="textPrimary" variant="h5">
             Dev App
           </Typography>
+          {error && <Alert severity="error">{error}</Alert>}
           <AppForm
             initialValues={{ email: "", password: "" }}
             onSubmit={handleSubmit}
