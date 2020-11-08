@@ -1,6 +1,6 @@
 ## DevMeApp
 
-An social media application for developers, built with React, Redux, JavaScript, and CSS.
+A social media application for developers, built with React, Redux, JavaScript, and CSS.
 
 [Web app deployed on Heroku](https://devmeapp.herokuapp.com/)
 
