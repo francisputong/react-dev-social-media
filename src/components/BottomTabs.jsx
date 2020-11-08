@@ -17,6 +17,8 @@ const BottomTabs = ({ userId }) => {
     return history.push(page);
   }, [page]);
 
+  if (!userId) return <div></div>;
+
   return (
     <BottomNavigation
       className={classes.tabs}
@@ -38,7 +40,7 @@ const BottomTabs = ({ userId }) => {
 };
 
 const mapStateToProps = (state) => ({
-  userId: state.auth.user.id,
+  userId: state.auth.user?.id,
 });
 
 export default connect(mapStateToProps)(BottomTabs);
